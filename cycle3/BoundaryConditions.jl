@@ -21,7 +21,7 @@ module BoundaryConditions
     # returns value of cBx in the point (i,j)
     function get_cBx(mesh::Matrix{Float64}, i::Int, j::Int, side::Int)
 
-        if i >= 1 && i <= side && j>= 1 && j <= side #normal condition
+        if i >= 1 && i <= side && j >= 1 && j <= side #normal condition
 
             return mesh[i, j]
 
@@ -35,12 +35,12 @@ module BoundaryConditions
 
     # returns value of cBy in the point (i,j)
     function get_cBy(mesh::Matrix{Float64}, i::Int, j::Int, side::Int)
-        #println(1.0/(3.0e8)*sin(-k*delta_x))
-        if j <= 0 #initial value of cBy
-            println(sin(-k*delta_x))
+
+        if i <= 0 #initial value of cBy
+
             return sin(-k*delta_x)
 
-        elseif i >= 1 && i <= side && j <= side #normal condition
+        elseif i <= side && j >= 1 && j <= side #normal condition
 
             return mesh[i, j]
 
@@ -55,7 +55,7 @@ module BoundaryConditions
     # returns value of Ez in the point (i,j)
     function get_Ez(mesh::Matrix{Float64}, i::Int, j::Int, side::Int)
 
-        if i >= 1 && i <= side && j>= 1 && j <= side #normal condition
+        if i >= 1 && i <= side && j >= 1 && j <= side #normal condition
 
             return mesh[i, j]
 
