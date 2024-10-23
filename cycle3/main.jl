@@ -29,7 +29,7 @@ module cycle3
 
   # defines initial and final time
   side::Int = 100 #mesh size
-  final_t::Int = 10000 #final time
+  final_t::Int = 100 #final time
 
   # initializes Ez field
   Ez::Matrix{Float64} = zeros(side, side) 
@@ -39,26 +39,33 @@ module cycle3
   cBx::Matrix{Float64} = zeros(side, side) # initializes Bx times c field
 
   # time loop
-  for t in 1:final_t
+  for t in 0:final_t
 
-    # atualizes magnectic field
-    for i in 2:2:side
-      for j in 2:2:side
+    if t % 2 == 0 # even time
 
-          cBx[i, j] += sc * (get_Ez.BoundaryConditions(Ez,i, j+1) - get_Ez.BoundaryConditions(Ez,i, j-1))
-          cBy[i, j] -= sc * (get_Ez.BoundaryConditions(Ez,i+1, j) - get_Ez.BoundaryConditions(Ez,i-1, j))
-        
+      # atualizes eletric field
+      for i in 1:side
+        for j in 1:side
+          #if j == 1 println(1.0/(3.0e8)) end
+          Ez[i, j] += (sc / er[1]) * ((BoundaryConditions.get_cBy(cBy, i+1, j, side) - BoundaryConditions.get_cBy(cBy, i-1, j, side)) - (BoundaryConditions.get_cBx(cBx, i, j+1, side) - BoundaryConditions.get_cBx(cBx, i, j-1, side)))
+
+        end
       end
+
+    else # odd time
+
+      # atualizes magnectic field
+      for i in 2:side
+        for j in 2:side
+
+            cBx[i, j] += sc * (BoundaryConditions.get_Ez(Ez, i, j+1, side) - BoundaryConditions.get_Ez(Ez, i, j-1, side))
+            cBy[i, j] -= sc * (BoundaryConditions.get_Ez(Ez, i+1, j, side) - BoundaryConditions.get_Ez(Ez, i-1, j, side))
+          
+        end
+      end
+
     end
 
-    # atualizes eletric field
-    for i in 1:2:side
-      for j in 1:2:side
-
-        Ez[i, j] += (sc / er[1]) * ((get_cBy.BoundaryConditions(cBy,i+1, j) - get_cBy.BoundaryConditions(cBy,i-1, j)) - (get_cBy.BoundaryConditions(cBy,i, j+1) - get_cBy.BoundaryConditions(cBy,i, j-1)))
-
-      end
-    end
 
     # Plot
     if t % 10 == 0
