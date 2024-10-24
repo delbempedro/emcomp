@@ -15,8 +15,8 @@ Authors:
 module BoundaryConditions
 
     export get_cBx, get_cBy, get_Ez
-    k::Float64 = 400e-9
-    delta_x::Float64 = 1.5e8
+    w::Float64 = 1.2
+    delta_t::Float64 = 0.5/(3e8) #sc/(c*delta_x) (delta_x=1)
 
     # returns value of cBx in the point (i,j)
     function get_cBx(mesh::Matrix{Float64}, i::Int, j::Int, side::Int)
@@ -38,7 +38,7 @@ module BoundaryConditions
 
         if i <= 0 #initial value of cBy
 
-            return sin(-k*delta_x)
+            return sin(w*delta_t)
 
         elseif i <= side && j >= 1 && j <= side #normal condition
 
