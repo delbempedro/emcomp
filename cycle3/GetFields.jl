@@ -17,25 +17,29 @@ module GetFields
     export get_cBx, get_cBy, get_Ez
 
     # returns value of cBx in the point (i,j)
-    function get_cBx(mesh::Matrix{Float64}, i::Int, j::Int, side::Int)
+    function get_cBx(mesh::Matrix{Float64}, i::Int, j::Int, side::Int, omega::Float64, time::Int, E_initial::Float64)
 
         return mesh[i, j]
 
     end
 
     # returns value of cBy in the point (i,j)
-    function get_cBy(mesh::Matrix{Float64}, i::Int, j::Int, side::Int)
+    function get_cBy(mesh::Matrix{Float64}, i::Int, j::Int, side::Int, omega::Float64, time::Int, E_initial::Float64)
 
         return mesh[i, j]
 
     end
 
     # returns value of Ez in the point (i,j)
-    function get_Ez(mesh::Matrix{Float64}, i::Int, j::Int, side::Int)
+    function get_Ez(mesh::Matrix{Float64}, i::Int, j::Int, side::Int, omega::Float64, time::Int, E_initial::Float64)
 
-        if  j <= 0 || j >= side || i <= side # boundary condition
+        if  j <= 1 || j >= side || i <= 0 || i >= side # boundary condition
 
             return 0.0
+
+        elseif i == 1 # first line Ez
+
+            return mesh[1, j] = E_initial*cos(omega*time)
 
         else # normal condition
 

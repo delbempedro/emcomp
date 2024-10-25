@@ -25,21 +25,21 @@ module cycle3
   sc::Float64 = 0.5 #courant parameter (c*delta(t)/delta(x))
   er::Tuple{Float64, Float64} = (1.0, 10.0) #permittivity of free space
   E_initial::Float64 = 1.0 #initial E field
-  omega::Float64 = 100.0 #w*delta_t
+  omega::Float64 = 0.786 #w*delta_t
 
   # defines initial and final time
-  side::Int = 100 #mesh size
+  side::Int = 10 #mesh size
   time::Int = -1
-  final_t::Int = 100 #final time
+  final_t::Int = 10 #final time
   
   # initializes By times c field
   cBy::Matrix{Float64} = zeros(side, side)
-  for i in 1:side cBy[1, i] = E_initial*cos(omega*time) end
+  for i in 2:2:side cBy[1, i] = E_initial*cos(omega*time) end
 
   # initializes Ez field
   time += 1
   Ez::Matrix{Float64} = zeros(side, side) 
-  for i in 1:side Ez[1, i] = E_initial*cos(omega*time) end
+  for i in 1:2:side Ez[1, i] = E_initial*cos(omega*time) end
 
   # initializes Bx times c field
   cBx::Matrix{Float64} = zeros(side, side)
