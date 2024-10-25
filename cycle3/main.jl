@@ -25,7 +25,7 @@ module cycle3
   sc::Float64 = 0.5 #courant parameter (c*delta(t)/delta(x))
   er::Tuple{Float64, Float64} = (1.0, 10.0) #permittivity of free space
   E_initial::Float64 = 1.0 #initial E field
-  omega::Float64 = 10.0 #w*delta_t
+  omega::Float64 = 100.0 #w*delta_t
 
   # defines initial and final time
   side::Int = 100 #mesh size
@@ -45,7 +45,7 @@ module cycle3
   cBx::Matrix{Float64} = zeros(side, side)
 
   UpdateFields.update_fields(cBx::Matrix{Float64}, cBy::Matrix{Float64}, Ez::Matrix{Float64},
-  er::Tuple{Float64, Float64}, E_initial::Float64, omega::Float64, sc::Float64, side::Int, final_t::Int)_
+  er::Tuple{Float64, Float64}, E_initial::Float64, omega::Float64, sc::Float64, side::Int, final_t::Int)
 
   end
 
