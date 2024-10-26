@@ -36,12 +36,10 @@ module UpdateFields
 
                 #if i >= 50 && i <= 75 && j >= 50 && j <= 75 current_er = er[2] end
                 if i == 1 # first line Ez
-                    Ez[1, j] = E_initial*cos(omega*time)      
-                elseif j == 1 || i == side || j == side # boundary conditions
-                    Ez[i, j] = 0.0
+                    Ez[1, j] = E_initial*cos(omega*time)
                 else # other cases
-                    Ez[i, j] += (sc / current_er) * ((GetFields.get_cBy(cBy, i+1, j, side, omega, time, E_initial) - GetFields.get_cBy(cBy, i-1, j, side, omega, time, E_initial))
-                    - (GetFields.get_cBx(cBx, i, j+1, side, omega, time, E_initial) - GetFields.get_cBx(cBx, i, j-1, side, omega, time, E_initial)))
+                    Ez[i, j] += (sc / current_er) * ((GetFields.get_cBy(cBy, i, j+1, side, omega, time, E_initial) - GetFields.get_cBy(cBy, i, j-1, side, omega, time, E_initial))
+                    - (GetFields.get_cBx(cBx, i+1, j, side, omega, time, E_initial) - GetFields.get_cBx(cBx, i-1, j, side, omega, time, E_initial)))
                     #println(Ez[i, j],GetFields.get_cBy(cBy, i+1, j, side, omega, time, E_initial),GetFields.get_cBy(cBy, i-1, j, side, omega, time, E_initial),GetFields.get_cBx(cBx, i, j+1, side, omega, time, E_initial),GetFields.get_cBx(cBx, i, j-1, side, omega, time, E_initial), " ", i, " ", j)
                 end
                 #mesh[i, j] = 200.0 
@@ -60,18 +58,20 @@ module UpdateFields
                     if j%2 == 0
 
                     if i == 1
-                        cBy[i, j] = E_initial*cos(omega*time)
+                        cBy[1, j] = E_initial*cos(omega*time)
                     else
-                        cBy[i, j] += sc * (GetFields.get_Ez(Ez, i+1, j, side, omega, time, E_initial) - GetFields.get_Ez(Ez, i-1, j, side, omega, time, E_initial))
+                        cBy[i, j] += sc * (GetFields.get_Ez(Ez, i, j+1, side, omega, time, E_initial) - GetFields.get_Ez(Ez, i, j-1, side, omega, time, E_initial))
                     end
                         #mesh[i, j] = 100.0
-                        println(cBy[i, j]," ", GetFields.get_Ez(Ez, i+1, j, side, omega, time, E_initial)," ", GetFields.get_Ez(Ez, i-1, j, side, omega, time, E_initial), " ", i, " ", j)
+                        #println(cBy[i, j]," ", GetFields.get_Ez(Ez, i, j+1, side, omega, time, E_initial)," ", GetFields.get_Ez(Ez, i, j-1, side, omega, time, E_initial), " ", i, " ", j)
                     end
                     
                 else
 
-                    if j%2 == 0
-                        cBx[i, j] += sc * (GetFields.get_Ez(Ez, i, j+1, side, omega, time, E_initial) - GetFields.get_Ez(Ez, i, j-1, side, omega, time, E_initial))
+                    if j%2 == 1
+                        cBx[i, j] += sc * (GetFields.get_Ez(Ez, i+1, j, side, omega, time, E_initial) - GetFields.get_Ez(Ez, i-1, j, side, omega, time, E_initial))
+                        #println(cBx[i, j]," ", GetFields.get_Ez(Ez, i+1, j, side, omega, time, E_initial)," ", GetFields.get_Ez(Ez, i-1, j, side, omega, time, E_initial), " ", i, " ", j)
+
                     end
                     #mesh[i, j] = 50.0 
 
@@ -84,7 +84,7 @@ module UpdateFields
 
 
             # Plot
-            if time % 1 == 0
+            if time % 100 == 0
                 heatmap(Ez', title="Campo Elétrico - Passo $time", c=:inferno)
                 savefig("campo_eletrico_$time.png") # save the figure as a PNG file
             end

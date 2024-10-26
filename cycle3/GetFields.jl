@@ -19,14 +19,30 @@ module GetFields
     # returns value of cBx in the point (i,j)
     function get_cBx(mesh::Matrix{Float64}, i::Int, j::Int, side::Int, omega::Float64, time::Int, E_initial::Float64)
 
-        return mesh[i, j]
+        if  j <= 0 || j >= side || i <= 0 || i >= side # boundary condition
+
+            return 0.0
+    
+        else
+
+            return mesh[i, j]
+    
+        end
 
     end
 
     # returns value of cBy in the point (i,j)
     function get_cBy(mesh::Matrix{Float64}, i::Int, j::Int, side::Int, omega::Float64, time::Int, E_initial::Float64)
 
-        return mesh[i, j]
+        if  j <= 0 || j >= side || i <= 0 || i >= side # boundary condition
+
+            return 0.0
+
+        else
+
+            return mesh[i, j]
+
+        end
 
     end
 

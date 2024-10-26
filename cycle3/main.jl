@@ -22,15 +22,15 @@ module cycle3
   function main()
 
   # defines phisicial consts
-  sc::Float64 = 0.5 #courant parameter (c*delta(t)/delta(x))
-  er::Tuple{Float64, Float64} = (1.0, 10.0) #permittivity of free space
+  sc::Float64 = 0.35 #courant parameter (c*delta(t)/delta(x))
+  er::Tuple{Float64, Float64} = (1.0, 0.1) #relative eletric permitivity
   E_initial::Float64 = 1.0 #initial E field
-  omega::Float64 = 0.786 #w*delta_t
+  omega::Float64 = 3.14 #w*delta_t
 
   # defines initial and final time
-  side::Int = 10 #mesh size
+  side::Int = 100 #mesh size
   time::Int = -1
-  final_t::Int = 10 #final time
+  final_t::Int = 2000 #final time
   
   # initializes By times c field
   cBy::Matrix{Float64} = zeros(side, side)
