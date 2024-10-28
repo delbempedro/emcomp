@@ -20,7 +20,7 @@ module UpdateFields
     using Plots
 
     function update_fields(cBx::Matrix{Float64}, cBy::Matrix{Float64}, Ez::Matrix{Float64},
-        er::Tuple{Float64, Float64}, E_initial::Float64, omega::Float64, sc::Float64, side::Int, final_t::Int, list::Vector{Tuple{Int, Int}})
+        er::Tuple{Float64, Float64}, E_initial::Float64, omega::Float64, sc::Float64, side::Int, final_t::Int, len_points::Vector{Tuple{Int, Int}})
 
         # time loop
         for time in 0:final_t
@@ -38,7 +38,7 @@ module UpdateFields
 """                elseif i == 5 && j != 25
                     Ez[i, j] = 0.0"""
                 else # other cases
-                    if i <= 100 && j <= 100 if (i,j) in list current_er = er[2] end end # changes er 
+                    if i <= 100 && j <= 100 if (i,j) in len_points current_er = er[2] end end # changes er 
                     Ez[i, j] += (sc / current_er) * ((GetFields.get_cBy(cBy, i, j+1, side, omega, time, E_initial) - GetFields.get_cBy(cBy, i, j-1, side, omega, time, E_initial))
                     - (GetFields.get_cBx(cBx, i+1, j, side, omega, time, E_initial) - GetFields.get_cBx(cBx, i-1, j, side, omega, time, E_initial)))
                 end
@@ -82,7 +82,7 @@ module UpdateFields
             if time % 5 == 0
                 # Plota Ez como heatmap
                 heatmap(Ez', title="Campo Elétrico - Passo $time", c=:inferno, xlabel="X", ylabel="Y", colorbar_title="Ez")
-                scatter!(list, marker=:circle, markersize=3, color="white")
+                scatter!(len_points, marker=:circle, markersize=3, color="white")
                 # Salva a figura como PNG
                 savefig("campo_eletrico_$time.png")
             end

@@ -1,4 +1,3 @@
-dados = """
 0 49
 0 50
 1 48
@@ -199,16 +198,3 @@ dados = """
 98 51
 99 49
 99 50
-"""
-
-# Converter a string em um vetor de números
-valores = dados.split()
-
-final_values = []
-for i in range(int(len(valores)/2)):
-    aux = (int(valores.pop()), int(valores.pop()))
-    final_values.append(aux)
-
-
-# Exibir resultado
-print(final_values)
