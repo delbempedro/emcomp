@@ -1,0 +1,3 @@
+#println("Ez ",Ez[i, j]," cBy(j+1) ", GetFields.get_cBy(cBy, i, j+1, side, omega, time, E_initial)," cBy(j-1) ", GetFields.get_cBy(cBy, i, j-1, side, omega, time, E_initial)," cBx(i+1) ", GetFields.get_cBy(cBx, i+1, j, side, omega, time, E_initial)," cBx(i-1) ", GetFields.get_cBy(cBx, i-1, j, side, omega, time, E_initial)," i ", i," j ", j)
+#println("cBy ",cBy[i, j]," Ez(j+1) ", GetFields.get_cBy(Ez, i, j+1, side, omega, time, E_initial)," Ez(j-1) ", GetFields.get_cBy(Ez, i, j-1, side, omega, time, E_initial)," i ", i," j ", j)
+#println(cBx[i, j]," ", GetFields.get_Ez(Ez, i+1, j, side, omega, time, E_initial)," ", GetFields.get_Ez(Ez, i-1, j, side, omega, time, E_initial), " ", i, " ", j)

@@ -55,7 +55,7 @@ module GetFields
 
         elseif i == 1 # first line Ez
 
-            return mesh[1, j] = E_initial*cos(omega*time)
+            return E_initial*cos(omega*time)
 
         else # normal condition
 

@@ -20,8 +20,8 @@ module UpdateFields
     using Plots
 
     function update_fields(cBx::Matrix{Float64}, cBy::Matrix{Float64}, Ez::Matrix{Float64},
-        er::Tuple{Float64, Float64}, E_initial::Float64, omega::Float64, sc::Float64, side::Int, final_t::Int)
-        mesh = zeros(Float64, side, side)
+        er::Tuple{Float64, Float64}, E_initial::Float64, omega::Float64, sc::Float64, side::Int, final_t::Int, len_points::Vector{Vector{Int64}})
+
         # time loop
         for time in 0:final_t
 
@@ -29,20 +29,20 @@ module UpdateFields
 
             if time % 2 == 0 # even time
 
-            
             # atualizes eletric field
             for i in 1:2:side
-                for j in 1:2:side
+                for j in 3:2:side-1 # zero in the boundary
 
-                #if i >= 50 && i <= 75 && j >= 50 && j <= 75 current_er = er[2] end
+
                 if i == 1 # first line Ez
                     Ez[1, j] = E_initial*cos(omega*time)
+"""                elseif i == 5 && j != 25
+                    Ez[i, j] = 0.0"""
                 else # other cases
+                    if i <= 100 && j <= 100 if len_points[i][j] == 1.0 current_er = er[2] end end # changes er 
                     Ez[i, j] += (sc / current_er) * ((GetFields.get_cBy(cBy, i, j+1, side, omega, time, E_initial) - GetFields.get_cBy(cBy, i, j-1, side, omega, time, E_initial))
                     - (GetFields.get_cBx(cBx, i+1, j, side, omega, time, E_initial) - GetFields.get_cBx(cBx, i-1, j, side, omega, time, E_initial)))
-                    #println(Ez[i, j],GetFields.get_cBy(cBy, i+1, j, side, omega, time, E_initial),GetFields.get_cBy(cBy, i-1, j, side, omega, time, E_initial),GetFields.get_cBx(cBx, i, j+1, side, omega, time, E_initial),GetFields.get_cBx(cBx, i, j-1, side, omega, time, E_initial), " ", i, " ", j)
                 end
-                #mesh[i, j] = 200.0 
 
                 end
             end
@@ -62,18 +62,14 @@ module UpdateFields
                     else
                         cBy[i, j] += sc * (GetFields.get_Ez(Ez, i, j+1, side, omega, time, E_initial) - GetFields.get_Ez(Ez, i, j-1, side, omega, time, E_initial))
                     end
-                        #mesh[i, j] = 100.0
-                        #println(cBy[i, j]," ", GetFields.get_Ez(Ez, i, j+1, side, omega, time, E_initial)," ", GetFields.get_Ez(Ez, i, j-1, side, omega, time, E_initial), " ", i, " ", j)
-                    end
+
+                end
                     
                 else
 
                     if j%2 == 1
-                        cBx[i, j] += sc * (GetFields.get_Ez(Ez, i+1, j, side, omega, time, E_initial) - GetFields.get_Ez(Ez, i-1, j, side, omega, time, E_initial))
-                        #println(cBx[i, j]," ", GetFields.get_Ez(Ez, i+1, j, side, omega, time, E_initial)," ", GetFields.get_Ez(Ez, i-1, j, side, omega, time, E_initial), " ", i, " ", j)
-
+                        cBx[i, j] -= sc * (GetFields.get_Ez(Ez, i+1, j, side, omega, time, E_initial) - GetFields.get_Ez(Ez, i-1, j, side, omega, time, E_initial))
                     end
-                    #mesh[i, j] = 50.0 
 
                 end
 
@@ -82,16 +78,19 @@ module UpdateFields
 
             end
 
+            len_points_matrix = hcat(len_points...)
 
             # Plot
-            if time % 100 == 0
-                heatmap(Ez', title="Campo Elétrico - Passo $time", c=:inferno)
-                savefig("campo_eletrico_$time.png") # save the figure as a PNG file
+            if time % 5 == 0
+                # Plota Ez como heatmap
+                heatmap(Ez', title="Campo Elétrico - Passo $time", c=:inferno, xlabel="X", ylabel="Y", colorbar_title="Ez")
+
+                # Sobrepõe o contorno para len_points
+                contour!(len_points_matrix, levels=[0.5], linewidth=2, linecolor=:cyan, linestyle=:dash)
+
+                # Salva a figura como PNG
+                savefig("campo_eletrico_$time.png")
             end
-"""            if time % 10 == 0
-            heatmap(mesh', title="Campo Elétrico - Passo $time", c=:inferno)
-            savefig("campo_eletrico_$time.png") # save the figure as a PNG file
-            end"""
 
         end
     end

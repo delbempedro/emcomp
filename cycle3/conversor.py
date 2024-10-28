@@ -104,14 +104,11 @@ dados = """
 # Converter a string em um vetor de números
 valores = dados.split()
 
-final_values = []
-for i in range(100):
-    aux = []
-    for j in range(100):
-        a =  int(float(valores[i]))
-        aux.append(a)
-    final_values.append(aux)
+for i in range(len(valores)):
+    valores[i] = int(float(valores[i])/10)
 
+# Agrupar os valores em tuplas de dois
+valores_convertidos = [(valores[i], valores[i+1]) for i in range(0, len(valores), 2)]
 
 # Exibir resultado
-print(final_values)
+print(valores_convertidos)
