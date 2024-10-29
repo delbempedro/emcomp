@@ -78,14 +78,12 @@ module UpdateFields
             end
 
 
-            # Plot
-            if time % 5 == 0
-                # Plota Ez como heatmap
-                heatmap(Ez', title="Campo Elétrico - Passo $time", c=:inferno, xlabel="X", ylabel="Y", colorbar_title="Ez")
-                scatter!(len_points, marker=:circle, markersize=3, color="white")
-                # Salva a figura como PNG
-                savefig("campo_eletrico_$time.png")
-            end
+            # Plot Ez with heatmap
+            heatmap(Ez', title="Campo Elétrico", c=:inferno, xlabel="X", ylabel="Y", colorbar_title="Ez")
+            scatter!(len_points, marker=:circle, markersize=3, color="white")
+            # Save PNG figure
+            savefig("campo_eletrico_$time.png")
+
 
         end
 
