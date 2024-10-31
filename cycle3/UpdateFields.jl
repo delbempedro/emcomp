@@ -20,7 +20,8 @@ module UpdateFields
     using Plots
 
     function update_fields(cBx::Matrix{Float64}, cBy::Matrix{Float64}, Ez::Matrix{Float64},
-        er::Tuple{Float64, Float64}, E_initial::Float64, omega::Float64, sc::Float64, side::Int, final_t::Int, len_points::Vector{Tuple{Int, Int}})
+        er::Tuple{Float64, Float64}, E_initial::Float64, omega::Float64, sc::Float64,
+        height::Int, width::Int, final_t::Int, lens::Vector{Tuple{Int, Int}}, lens_contour::Vector{Tuple{Int, Int}})
 
         # time loop
         for time in 0:final_t
@@ -28,8 +29,8 @@ module UpdateFields
             if time % 2 == 0 # even time
 
             # atualizes eletric field
-            for i in 1:2:side
-                for j in 3:2:side-1 # zero in the boundary
+            for i in 1:2:height
+                for j in 3:2:width-1 # zero in the boundary
 
                 current_er = er[1]
 
@@ -38,9 +39,9 @@ module UpdateFields
 """                elseif i == 5 && j != 25
                     Ez[i, j] = 0.0"""
                 else # other cases
-                    if i <= 100 && j <= 100 if (i,j) in len_points current_er = er[2] end end # changes er 
-                    Ez[i, j] += (sc / current_er) * ((GetFields.get_cBy(cBy, i, j+1, side, omega, time, E_initial) - GetFields.get_cBy(cBy, i, j-1, side, omega, time, E_initial))
-                    - (GetFields.get_cBx(cBx, i+1, j, side, omega, time, E_initial) - GetFields.get_cBx(cBx, i-1, j, side, omega, time, E_initial)))
+                    if i <= 100 && j <= 100 if (i,j) in lens current_er = er[2] end end # changes er 
+                    Ez[i, j] += (sc / current_er) * ((GetFields.get_cBy(cBy, i, j+1, height, width, omega, time, E_initial) - GetFields.get_cBy(cBy, i, j-1, height, width, omega, time, E_initial))
+                    - (GetFields.get_cBx(cBx, i+1, j, height, width, omega, time, E_initial) - GetFields.get_cBx(cBx, i-1, j, height, width, omega, time, E_initial)))
                 end
 
                 end
@@ -49,8 +50,8 @@ module UpdateFields
             else # odd time
 
             # atualizes magnectic field
-            for i in 1:side
-                for j in 1:side
+            for i in 1:height
+                for j in 1:width
 
                 if i%2 == 1
 
@@ -59,7 +60,7 @@ module UpdateFields
                     if i == 1
                         cBy[1, j] = E_initial*cos(omega*time)
                     else
-                        cBy[i, j] += sc * (GetFields.get_Ez(Ez, i, j+1, side, omega, time, E_initial) - GetFields.get_Ez(Ez, i, j-1, side, omega, time, E_initial))
+                        cBy[i, j] += sc * (GetFields.get_Ez(Ez, i, j+1, height, width, omega, time, E_initial) - GetFields.get_Ez(Ez, i, j-1, height, width, omega, time, E_initial))
                     end
 
                 end
@@ -67,7 +68,7 @@ module UpdateFields
                 else
 
                     if j%2 == 1
-                        cBx[i, j] -= sc * (GetFields.get_Ez(Ez, i+1, j, side, omega, time, E_initial) - GetFields.get_Ez(Ez, i-1, j, side, omega, time, E_initial))
+                        cBx[i, j] -= sc * (GetFields.get_Ez(Ez, i+1, j, height, width, omega, time, E_initial) - GetFields.get_Ez(Ez, i-1, j, height, width, omega, time, E_initial))
                     end
 
                 end
@@ -80,7 +81,7 @@ module UpdateFields
 
             # Plot Ez with heatmap
             heatmap(Ez', title="Campo Elétrico", c=:inferno, xlabel="X", ylabel="Y", colorbar_title="Ez")
-            scatter!(len_points, marker=:circle, markersize=3, color="white")
+            scatter!(lens_contour, marker=:circle, markersize=3, color="white", legend=false)
             # Save PNG figure
             savefig("campo_eletrico_$time.png")
 
