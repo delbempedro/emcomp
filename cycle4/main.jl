@@ -25,8 +25,8 @@ module cycle4
   using .GetField
   include("./ComputeTimeRetardation.jl")
   using .ComputeTimeRetardation
-  include("./PlotField.jl")
-  using .PlotField
+  include("./SaveFields.jl")
+  using .SaveFields
 
   function main()
 
@@ -37,11 +37,14 @@ module cycle4
     #define the final time
     final_time::Int = 10
     
+    #initialize the fields matrix with zeros
     Ex::Matrix{Float64} = zeros(side, side)
     Ey::Matrix{Float64} = zeros(side, side)
-    
+
+    #compute the fields for each time
     for time in 0:final_time
 
+      #compute the fields for each point
       for weight in 1:side
         for height in 1:side
 
@@ -63,14 +66,13 @@ module cycle4
           Ex[weight, height] = GetField.Ex(x, y, Vx, Vy, Ay, c)
           Ey[weight, height] = GetField.Ey(x, y, Vx, Vy, Ax, c)
 
-          #plot the field
-          PlotField.Plot(Ex, Ey, side, time)
-
         end
       end
 
-    end
+      #save the fields
+      SaveFields.SaveField(Ex, Ey, side, time)
 
+    end
 
   end
 
