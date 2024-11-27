@@ -17,32 +17,57 @@ module ComputeTimeRetardation
     include("./FindCriticalPoints.jl")
     using .FindCriticalPoints
 
-    function TimeRetardation(time::Int, Point::Tuple{Int,Int}, c::Float64)
+    function TimeRetardation(current_time::Float64, Point::Tuple{Int,Int}, c::Float64)
 
-      time_at_max_distance::Float64, time_at_min_distance::Float64 = FindCriticalPoints.CriticalPoints(time::Int, Point::Tuple{Int,Int})
-
-      max_distance::Float64 = FindCriticalPoints.distance(time_at_max_distance::Float64, Point::Tuple{Int,Int})
-      min_distance::Float64 = FindCriticalPoints.distance(time_at_min_distance::Float64, Point::Tuple{Int,Int})
-
+      #compute the critical times
+      time_at_max_distance::Float64, time_at_min_distance::Float64 = FindCriticalPoints.realCriticalPoints(current_time::Float64, Point::Tuple{Int,Int})
+      println("CurrentTime: $current_time"," TimeAtMaxDistance: $time_at_max_distance", " TimeAtMinDistance: $time_at_min_distance")
+      #compute the middle time
       middle_time::Float64 = (time_at_max_distance + time_at_min_distance)/2
+      #compute the distance between the point and the trajectory at middle time
       middle_distance::Float64 = FindCriticalPoints.distance(middle_time::Float64, Point::Tuple{Int,Int})
         
-      light_time_to_propagation::Float64 = middle_distance/c
+      #compute ditance that light propagates between middle_time and current_time
+      light_distance_propagation::Float64 = (current_time-middle_time)*c
 
-      error::Float64 = middle_distance - middle_light_propagation
-      
-      #light propagates more 
-      if error > 0
+      #compute the error
+      error::Float64 = middle_distance - light_distance_propagation
+      println("I'm wrong for $error")
+      while error > 0.5 || error < -0.5
 
-      elseif error < 0
+        if error > 0
+          time_at_max_distance = middle_time
+          middle_time = (middle_time+time_at_min_distance)/2
 
-      else
+          #compute the distance between the point and the trajectory at middle time
+          middle_distance = FindCriticalPoints.distance(middle_time::Float64, Point::Tuple{Int,Int})
+          #println("MiddleDistance: $middle_distance")
+          #compute ditance that light propagates between middle_time and current_time
+          light_distance_propagation = (current_time-middle_time)*c
+          #println("LightDistancePropagation: $light_distance_propagation")
+          #compute the error
+          error = middle_distance - light_distance_propagation
+          #println(" I'm wrong for $error")
+        elseif error < 0
 
-        return middle_time
+          time_at_min_distance = middle_time
+          middle_time = (middle_time+time_at_max_distance)/2
+
+          #compute the distance between the point and the trajectory at middle time
+          middle_distance = FindCriticalPoints.distance(middle_time::Float64, Point::Tuple{Int,Int})
+          #println("MiddleDistance: $middle_distance")
+          #compute ditance that light propagates between middle_time and current_time
+          light_distance_propagation = (current_time-middle_time)*c
+          #println("LightDistancePropagation: $light_distance_propagation")
+          #compute the error
+          error = middle_distance - light_distance_propagation
+          #println(" I'm wrong for $error")
+        end
 
       end
-
-      return time
+      println("I'm here, in time $current_time")
+      #return the middle time when the module of error is less than 0.1
+      return middle_time
 
     end
 

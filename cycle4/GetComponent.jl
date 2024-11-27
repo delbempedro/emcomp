@@ -15,40 +15,40 @@ Authors:
 module GetComponent
 
   #define the constants of the moviment
-  omega::Float64 = 0.9*3e8 #0.9c
-  R::Float64 = 1 #radius
+  omega::Float64 = 0.9 #0.9c
+  R::Float64 = 1.0 #radius
 
-  function X(t::Int, Point::Tuple{Int, Int})
+  function X(t::Float64, Point::Tuple{Int, Int})
     
     return R*cos(omega*t) + Point[1]
     
   end
 
-  function Y(t::Int, Point::Tuple{Int, Int})
+  function Y(t::Float64, Point::Tuple{Int, Int})
     
     return R*sin(omega*t) + Point[2]
     
   end
 
-  function Vx(t::Int)
+  function Vx(t::Float64)
     
     return -R*omega*sin(omega*t)
     
   end
 
-  function Vy(t::Int)
+  function Vy(t::Float64)
     
     return R*omega*cos(omega*t)
     
   end
 
-  function Ax(t::Int)
+  function Ax(t::Float64)
 
     return -R*omega^2*cos(omega*t)
 
   end
 
-  function Ay(t::Int)
+  function Ay(t::Float64)
 
     return -R*omega^2*sin(omega*t)
 

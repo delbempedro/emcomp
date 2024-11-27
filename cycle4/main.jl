@@ -31,7 +31,8 @@ module cycle4
   function main()
 
     #define the constants
-    c::Float64 = 3e8 #speed of light
+    c::Float64 = 1.0 #speed of light
+    R::Float64 = 1.0 #radius
     side::Int = 100
 
     #define the final time
@@ -48,23 +49,36 @@ module cycle4
       for weight in 1:side
         for height in 1:side
 
+          #converts the time(Int) to operational_time(Float64)
+          operational_time::Float64 = time*1.0
+
           #define the point
           Point::Tuple{Int, Int} = (weight, height)
 
-          #define the time retardation
-          time_ret = ComputeTimeRetardation.TimeRetardation(time, Point, c)
+          #if the point is inside the light circle
+          if operational_time*c > sqrt((R-Point[1])^2 + (R-Point[2])^2)
 
-          #define the components
-          x::Float64 = GetComponent.X(time_ret, Point)
-          y::Float64 = GetComponent.Y(time_ret, Point)
-          Vx::Float64 = GetComponent.Vx(time_ret)
-          Vy::Float64 = GetComponent.Vy(time_ret)
-          Ax::Float64 = GetComponent.Ax(time_ret)
-          Ay::Float64 = GetComponent.Ay(time_ret)
+            #define the time retardation
+            time_ret::Float64 = ComputeTimeRetardation.TimeRetardation(operational_time, Point, c)
 
-          #compute the field
-          Ex[weight, height] = GetField.Ex(x, y, Vx, Vy, Ay, c)
-          Ey[weight, height] = GetField.Ey(x, y, Vx, Vy, Ax, c)
+            #define the components
+            x::Float64 = GetComponent.X(time_ret, Point)
+            y::Float64 = GetComponent.Y(time_ret, Point)
+            Vx::Float64 = GetComponent.Vx(time_ret)
+            Vy::Float64 = GetComponent.Vy(time_ret)
+            Ax::Float64 = GetComponent.Ax(time_ret)
+            Ay::Float64 = GetComponent.Ay(time_ret)
+
+            #compute the field
+            Ex[weight, height] = GetField.Ex(x, y, Vx, Vy, Ay, c)
+            Ey[weight, height] = GetField.Ey(x, y, Vx, Vy, Ax, c)
+
+          else 
+
+            Ex[weight, height] = 0.0
+            Ey[weight, height] = 0.0
+
+          end
 
         end
       end

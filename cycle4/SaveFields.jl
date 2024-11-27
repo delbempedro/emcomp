@@ -21,8 +21,9 @@ module SaveFields
 
       for i in 1:side
         for j in 1:side
-          write(arquivo, "$(Ex[i,j]) $(Ey[i,j])\n")
+          write(arquivo, "$(Ex[i,j]) $(Ey[i,j])  ")
         end
+        write(arquivo, "\n")
       end
 
     end
