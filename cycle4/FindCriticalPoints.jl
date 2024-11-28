@@ -26,10 +26,20 @@ module FindCriticalPoints
     #compute the distance between the point and the trajectory at the given time
     x::Float64 = GetComponent.X(time, Point)
     y::Float64 = GetComponent.Y(time, Point)
-    distance::Float64 = sqrt((x-Point[1])^2 + (y-Point[2])^2)
+    distance::Float64 = sqrt(x^2 + y^2)
 
     return distance
     
+  end
+
+  function MaxMin(time::Float64, Point::Tuple{Int,Int})
+
+    number_of_turns = div(time*omega, 2*pi)
+    theta_at_min_distance = 2*pi*number_of_turns/omega
+    theta_at_max_distance = 2*pi*(number_of_turns+0.5)/omega
+
+    return theta_at_max_distance, theta_at_min_distance
+
   end
 
   function realCriticalPoints(time::Float64, Point::Tuple{Int,Int})

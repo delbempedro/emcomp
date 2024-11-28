@@ -20,37 +20,37 @@ module GetComponent
 
   function X(t::Float64, Point::Tuple{Int, Int})
     
-    return R*cos(omega*t) + Point[1]
+    return Point[1] - R*cos(omega*t)
     
   end
 
   function Y(t::Float64, Point::Tuple{Int, Int})
     
-    return R*sin(omega*t) + Point[2]
+    return Point[2] - R*sin(omega*t)
     
   end
 
   function Vx(t::Float64)
     
-    return -R*omega*sin(omega*t)
+    return R*omega*sin(omega*t)
     
   end
 
   function Vy(t::Float64)
     
-    return R*omega*cos(omega*t)
+    return -R*omega*cos(omega*t)
     
   end
 
   function Ax(t::Float64)
 
-    return -R*omega^2*cos(omega*t)
+    return R*omega^2*cos(omega*t)
 
   end
 
   function Ay(t::Float64)
 
-    return -R*omega^2*sin(omega*t)
+    return R*omega^2*sin(omega*t)
 
   end
 
