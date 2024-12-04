@@ -1,4 +1,0 @@
-println("CurrentTime: $current_time","
-      TimeAtMaxDistance: $time_at_max_distance", " TimeAtMinDistance: $time_at_min_distance")
-println("I'm wrong for $error")
-println("I'm here, in time $current_time")

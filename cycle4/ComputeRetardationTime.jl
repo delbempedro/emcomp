@@ -8,7 +8,7 @@ Dependencies:
 - Roots.jl
 
 Since:
-- 11/2024
+- 12/2024
 
 Authors:
 - Pedro Calligaris Delbem <pedrodelbem@usp.br>
