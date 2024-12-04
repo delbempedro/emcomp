@@ -66,7 +66,7 @@ module ComputeTimeRetardation
         end
 
       end
-      println("I'm here, in time $current_time")
+      
       #return the middle time when the module of error is less than 0.1
       return middle_time
 
