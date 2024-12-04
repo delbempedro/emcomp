@@ -17,6 +17,19 @@ module GetComponent
   #define the constants of the moviment
   omega::Float64 = 0.9 #0.9c
   R::Float64 = 1.0 #radius
+  c::Float64 = 1.0 #speed of light
+
+  function Constants(constante::String)
+
+    if constante == "omega"
+      return omega
+    elseif constante == "R"
+      return R
+    elseif constante == "c"
+      return c
+    end
+    
+  end
 
   function X(t::Float64, Point::Tuple{Int, Int})
     
