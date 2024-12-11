@@ -14,7 +14,7 @@ const c      = 1            # Speed of light
 const q      = 1.6e-19      # Charge (electron)
 const qpieps = q/(4pi*eps0)
 const R      = 1.0          # Radius of circular path (m)
-const omega  = 0.999c/R       # Angular velocity (rad/s)
+const omega  = 10e-8*c/R       # Angular velocity (rad/s)
 const T      = 2pi/omega    # Period of motion
 const h      = 1e-6         # for secant method
 
@@ -99,7 +99,7 @@ end
 function plot_field(t)
     xrange = (-5R, 5R)
     yrange = (-5R, 5R)
-    npoints = 200  # Number of grid points. Not too large.
+    npoints = 25  # Number of grid points. Not too large.
     
     x, y, Ex, Ey = calculate_field_grid(t, xrange, yrange, npoints)
     
